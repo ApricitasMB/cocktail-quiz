@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cocktail Quiz</title>
+<style>
+body{font-family:Arial;text-align:center;background:#0f172a;color:#fff;}
+button{padding:12px;margin:6px;border:none;border-radius:8px;}
+.card{background:#1e293b;margin:20px auto;padding:20px;border-radius:12px;max-width:500px;}
+.hidden{display:none;}
+</style>
+</head>
+<body>
+<div class="card" id="menu">
+<h2>🍸 Kategorie wählen</h2>
+<button onclick="start('klassisch')">Klassisch</button>
+<button onclick="start('highball')">Highballs</button>
+<button onclick="start('sprizz')">Sprizz</button>
+<button onclick="start('alkfrei')">Alkoholfrei</button>
+<button onclick="start('bestof')">Best Of</button>
+</div>
+<div class="card hidden" id="quiz">
+<h3 id="q"></h3>
+<div id="a"></div>
+<p id="counter"></p>
+</div>
+<div class="card hidden" id="result">
+<h2 id="res"></h2>
+<button onclick="location.reload()">Neu starten</button>
+</div>
+<script>
+const db={
+klassisch:[
+{q:"Wie viel cl Gin im Negroni?",a:["2","3","4","5"],c:1},
+{q:"Wie viel cl Whiskey im Whiskey Sour?",a:["2","3","5","7"],c:2}
+],
+highball:[
+{q:"Moscow Mule Filler?",a:["Cola","Tonic","Ginger Beer","Soda"],c:2}
+],
+sprizz:[
+{q:"Aperol Sprizz enthält?",a:["Aperol","Gin","Rum","Vodka"],c:0}
+],
+alkfrei:[
+{q:"Ipanema Filler?",a:["Ginger Ale","Cola","Saft","Milch"],c:0}
+],
+bestof:[
+{q:"Mojito Basis?",a:["Rum","Gin","Vodka","Tequila"],c:0}
+]
+};
+
+let cur=[],i=0,s=0;
+
+function start(cat){
+cur=db[cat];
+i=0;s=0;
+menu.classList.add("hidden");
+quiz.classList.remove("hidden");
+show();
+}
+
+function show(){
+let q=cur[i];
+qEl.innerText=q.q;
+counter.innerText=(i+1)+"/"+cur.length;
+let html="";
+q.a.forEach((ans,idx)=>{
+html+=`<button onclick="answer(${idx})">${ans}</button><br>`;
+});
+aEl.innerHTML=html;
+}
+
+function answer(idx){
+if(idx===cur[i].c)s++;
+i++;
+if(i<cur.length)show();else finish();
+}
+
+function finish(){
+quiz.classList.add("hidden");
+result.classList.remove("hidden");
+let pct=Math.round(s/cur.length*100);
+res.innerText="Score "+pct+"% "+(pct>=80?"✅ Bestanden":"❌");
+}
+
+const qEl=document.getElementById("q");
+const aEl=document.getElementById("a");
+const counter=document.getElementById("counter");
+</script>
+</body>
+</html>
+:::
